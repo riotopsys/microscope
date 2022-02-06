@@ -2,7 +2,18 @@ package net.riotopsys.microscope
 
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
+import java.io.File
 import java.io.Writer
+
+
+fun MicroscopeGame.outputHtml(path: String) {
+    File("$path/${this.name.replace(" ","_")}/index.html").apply {
+        parentFile.apply { if ( !exists() ) mkdirs() }
+        if ( !exists() ) createNewFile()
+    }.bufferedWriter().use { out ->
+        this.printSummary(out)
+    }
+}
 
 fun MicroscopeGame.printSummary(out: Writer) {
     out.appendHTML().html {
@@ -10,30 +21,7 @@ fun MicroscopeGame.printSummary(out: Writer) {
             title { +name }
             style {
                 unsafe {
-                    +"""
-                            .collapsible {
-                              background-color: #777;
-                              color: white;
-                              cursor: pointer;
-                              padding: 18px;
-                              width: 100%;
-                              border: none;
-                              text-align: left;
-                              outline: none;
-                              font-size: 15px;
-                            }
-
-                            .active, .collapsible:hover {
-                              background-color: #555;
-                            }
-
-                            .content {
-                              padding: 0 18px;
-                              display: none;
-                              overflow: hidden;
-                              background-color: #f1f1f1;
-                            }
-                        """.trimIndent()
+                    +loadResource("microscope.css")
                 }
             }
         }
@@ -46,22 +34,7 @@ fun MicroscopeGame.printSummary(out: Writer) {
             }
             script {
                 unsafe {
-                    +"""
-                            var coll = document.getElementsByClassName("collapsible");
-                            var i;
-
-                            for (i = 0; i < coll.length; i++) {
-                              coll[i].addEventListener("click", function() {
-                                this.classList.toggle("active");
-                                var content = this.nextElementSibling;
-                                if (content.style.display === "block") {
-                                  content.style.display = "none";
-                                } else {
-                                  content.style.display = "block";
-                                }
-                              });
-                            }
-                        """.trimIndent()
+                    +loadResource("collapsible.js")
                 }
             }
         }
@@ -92,10 +65,12 @@ private fun MicroscopeGame.printPlayers(tag: HtmlBlockTag) {
 
 fun Period.print(tag: HtmlBlockTag) {
     tag.div {
-        button(type = ButtonType.button, classes = "collapsible") {
+        button(type = ButtonType.button) {
+            classes = setOf("collapsible", "period")
             +this@print.name
         }
-        div("content") {
+        div {
+            classes = setOf("content", "period")
             printDescriptions()
             events.forEach {
                 it.print(this)
@@ -106,10 +81,12 @@ fun Period.print(tag: HtmlBlockTag) {
 
 fun Event.print(tag: HtmlBlockTag) {
     tag.div {
-        button(type = ButtonType.button, classes = "collapsible") {
+        button(type = ButtonType.button) {
+            classes = setOf("collapsible", "event")
             +this@print.name
         }
-        div("content") {
+        div {
+            classes = setOf("content", "event")
             printDescriptions()
             scenes.forEach {
                 it.print(this)
@@ -120,10 +97,12 @@ fun Event.print(tag: HtmlBlockTag) {
 
 fun Scene.print(tag: HtmlBlockTag) {
     tag.div {
-        button(type = ButtonType.button, classes = "collapsible") {
+        button(type = ButtonType.button) {
+            classes = setOf("collapsible", "scene")
             +this@print.question
         }
-        div("content") {
+        div {
+            classes = setOf("content", "scene")
             div {
                 p { +"Setting: $setting" }
                 p { +"Answer: $answer" }
@@ -143,3 +122,5 @@ fun Action.printDescriptions(tag: HtmlBlockTag) {
         }
     }
 }
+
+fun loadResource(file: String) = File(ClassLoader.getSystemResource(file).file).readText()

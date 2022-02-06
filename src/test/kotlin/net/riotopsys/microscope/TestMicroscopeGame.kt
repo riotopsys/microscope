@@ -93,12 +93,7 @@ internal class TestMicroscopeGame{
 
         }
 
-        File("./summary.html").apply {
-            if ( !exists() ) createNewFile()
-        }.bufferedWriter().use { out ->
-            game.printSummary(out)
-        }
-
+        game.outputHtml(".")
 
     }
 

@@ -1,0 +1,54 @@
+/* CSS - Cascading Style Sheet */
+/* Palette color codes */
+/* Palette URL: http://paletton.com/#uid=63I0+0kw0w0jyC+oRxVy4oIDfjr */
+
+/* Feel free to copy&paste color codes to your application */
+
+/* As hex codes */
+
+.color-primary-0 { color: #1047A9 }	/* Main Primary color */
+.color-primary-1 { color: #567BBF }
+.color-primary-2 { color: #345FAF }
+.color-primary-3 { color: #0C3683 }
+.color-primary-4 { color: #072967 }
+
+.color-secondary-1-0 { color: #7109AA }	/* Main Secondary color (1) */
+.color-secondary-1-1 { color: #9851BF }
+.color-secondary-1-2 { color: #822EAF }
+.color-secondary-1-3 { color: #570784 }
+.color-secondary-1-4 { color: #440467 }
+
+.color-secondary-2-0 { color: #34D800 }	/* Main Secondary color (2) */
+.color-secondary-2-1 { color: #79E258 }
+.color-secondary-2-2 { color: #5ADB31 }
+.color-secondary-2-3 { color: #28A700 }
+.color-secondary-2-4 { color: #208300 }
+
+.color-complement-0 { color: #FFA500 }	/* Main Complement color */
+.color-complement-1 { color: #FFC863 }
+.color-complement-2 { color: #FFB939 }
+.color-complement-3 { color: #C58000 }
+.color-complement-4 { color: #9B6400 }
+
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, .collapsible:hover {
+  background-color: #555;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
