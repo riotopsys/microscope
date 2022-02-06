@@ -6,33 +6,33 @@
 
 /* As hex codes */
 
-.color-primary-0 { color: #1047A9 }	/* Main Primary color */
-.color-primary-1 { color: #567BBF }
-.color-primary-2 { color: #345FAF }
-.color-primary-3 { color: #0C3683 }
-.color-primary-4 { color: #072967 }
+:root{
+    --color-primary-0: #1047A9;	/* Main Primary color */
+    --color-primary-1: #567BBF;
+    --color-primary-2: #345FAF;
+    --color-primary-3: #0C3683;
+    --color-primary-4: #072967;
 
-.color-secondary-1-0 { color: #7109AA }	/* Main Secondary color (1) */
-.color-secondary-1-1 { color: #9851BF }
-.color-secondary-1-2 { color: #822EAF }
-.color-secondary-1-3 { color: #570784 }
-.color-secondary-1-4 { color: #440467 }
+    --color-secondary-1-0: #7109AA;	/* Main Secondary color (1) */
+    --color-secondary-1-1: #9851BF;
+    --color-secondary-1-2: #822EAF;
+    --color-secondary-1-3: #570784;
+    --color-secondary-1-4: #440467;
 
-.color-secondary-2-0 { color: #34D800 }	/* Main Secondary color (2) */
-.color-secondary-2-1 { color: #79E258 }
-.color-secondary-2-2 { color: #5ADB31 }
-.color-secondary-2-3 { color: #28A700 }
-.color-secondary-2-4 { color: #208300 }
+    --color-secondary-2-0: #34D800;	/* Main Secondary color (2) */
+    --color-secondary-2-1: #79E258;
+    --color-secondary-2-2: #5ADB31;
+    --color-secondary-2-3: #28A700;
+    --color-secondary-2-4: #208300;
 
-.color-complement-0 { color: #FFA500 }	/* Main Complement color */
-.color-complement-1 { color: #FFC863 }
-.color-complement-2 { color: #FFB939 }
-.color-complement-3 { color: #C58000 }
-.color-complement-4 { color: #9B6400 }
+    --color-complement-0: #FFA500;	/* Main Complement color */
+    --color-complement-1: #FFC863;
+    --color-complement-2: #FFB939;
+    --color-complement-3: #C58000;
+    --color-complement-4: #9B6400;
+}
 
 .collapsible {
-  background-color: #777;
-  color: white;
   cursor: pointer;
   padding: 18px;
   width: 100%;
@@ -42,9 +42,33 @@
   font-size: 15px;
 }
 
-.active, .collapsible:hover {
-  background-color: #555;
+.collapsible.period {
+  background-color: var(--color-primary-2);
+  color: white;
 }
+
+.active.period, .collapsible:hover.period {
+  background-color: var(--color-primary-3);
+}
+
+.collapsible.event {
+  background-color: var(--color-secondary-1-2);
+  color: white;
+}
+
+.active.event, .collapsible:hover.event {
+  background-color: var(--color-secondary-1-3);
+}
+
+.collapsible.scene {
+  background-color: var(--color-secondary-2-2);
+  color: white;
+}
+
+.active.scene, .collapsible:hover.scene {
+  background-color: var(--color-secondary-2-3);
+}
+
 
 .content {
   padding: 0 18px;
@@ -52,3 +76,6 @@
   overflow: hidden;
   background-color: #f1f1f1;
 }
+
+
+
