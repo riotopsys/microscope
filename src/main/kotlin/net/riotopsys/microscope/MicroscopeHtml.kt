@@ -65,12 +65,14 @@ private fun MicroscopeGame.printPlayers(tag: HtmlBlockTag) {
 
 fun Period.print(tag: HtmlBlockTag) {
     tag.div {
+        classes = setOf("card")
         button(type = ButtonType.button) {
-            classes = setOf("collapsible", "period")
+            classes = setOf("collapsible", "period", "active")
             +this@print.name
         }
         div {
             classes = setOf("content", "period")
+            style = "display: block;"
             printDescriptions()
             events.forEach {
                 it.print(this)
@@ -81,12 +83,14 @@ fun Period.print(tag: HtmlBlockTag) {
 
 fun Event.print(tag: HtmlBlockTag) {
     tag.div {
+        classes = setOf("card")
         button(type = ButtonType.button) {
-            classes = setOf("collapsible", "event")
+            classes = setOf("collapsible", "event", "active")
             +this@print.name
         }
         div {
             classes = setOf("content", "event")
+            style = "display: block;"
             printDescriptions()
             scenes.forEach {
                 it.print(this)
@@ -97,12 +101,14 @@ fun Event.print(tag: HtmlBlockTag) {
 
 fun Scene.print(tag: HtmlBlockTag) {
     tag.div {
+        classes = setOf("card")
         button(type = ButtonType.button) {
-            classes = setOf("collapsible", "scene")
+            classes = setOf("collapsible", "scene", "active")
             +this@print.question
         }
         div {
             classes = setOf("content", "scene")
+            style = "display: block;"
             div {
                 p { +"Setting: $setting" }
                 p { +"Answer: $answer" }
