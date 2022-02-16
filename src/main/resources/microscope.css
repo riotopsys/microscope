@@ -7,105 +7,49 @@
 /* As hex codes */
 
 :root{
-    --color-primary-0: #1047A9;	/* Main Primary color */
-    --color-primary-1: #567BBF;
-    --color-primary-2: #345FAF;
-    --color-primary-3: #0C3683;
-    --color-primary-4: #072967;
-
-    --color-secondary-1-0: #7109AA;	/* Main Secondary color (1) */
-    --color-secondary-1-1: #9851BF;
-    --color-secondary-1-2: #822EAF;
-    --color-secondary-1-3: #570784;
-    --color-secondary-1-4: #440467;
-
-    --color-secondary-2-0: #34D800;	/* Main Secondary color (2) */
-    --color-secondary-2-1: #79E258;
-    --color-secondary-2-2: #5ADB31;
-    --color-secondary-2-3: #28A700;
-    --color-secondary-2-4: #208300;
-
-    --color-complement-0: #FFA500;	/* Main Complement color */
-    --color-complement-1: #FFC863;
-    --color-complement-2: #FFB939;
-    --color-complement-3: #C58000;
-    --color-complement-4: #9B6400;
+    --color-0: #9cc3e3; /*light blue*/
+    --color-1: #26305c; /*dark blue*/
+    --color-2: #774782; /*purple*/
+    --color-3: #e4ebec; /*off white*/
+    --color-4: #947c53; /*brown*/
 }
 
-.collapsible {
-  cursor: pointer;
-  padding: 1em;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-  border-top-right-radius: 1em;
-  border-top-left-radius: 1em;
-  border-bottom-right-radius: 1em;
-  border-bottom-left-radius: 1em;
+.header, .content.scene{
+    background-color: white;
+    width: 100%;
+    border-style: solid;
+
+    padding: .5em;
+    margin: .5em
 }
 
-.active {
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0px;
+.header.period {
+    border-color: var(--color-2);
 }
 
-.collapsible.period {
-  background-color: var(--color-primary-0);
-  color: white;
+.header.event {
+    border-color: var(--color-0);
 }
 
-.active.period, .collapsible:hover.period {
-  background-color: var(--color-primary-3);
-}
-
-.collapsible.event {
-  background-color: var(--color-secondary-1-0);
-  color: white;
-}
-
-.active.event, .collapsible:hover.event {
-  background-color: var(--color-secondary-1-3);
-}
-
-.collapsible.scene {
-  background-color: var(--color-secondary-2-0);
-  color: white;
-}
-
-.active.scene, .collapsible:hover.scene {
-  background-color: var(--color-secondary-2-3);
+.header.scene {
+    border-color: var(--color-4);
 }
 
 .content {
-  padding: 0 1em;
-  display: none;
-  overflow: hidden;
-  border-style: solid;
-  border-left-width: .25em;
-  border-bottom-width: .25em;
-  border-right-width: .25em;
-  border-top-width: 0em;
-  border-bottom-right-radius: 1em;
-  border-bottom-left-radius: 1em;
-}
-
-.content.period {
-    border-color: var(--color-primary-3)
-}
-
-.content.event {
-    border-color: var(--color-secondary-1-3)
-}
-
-.content.scene {
-    border-color: var(--color-secondary-2-3)
+    margin-left: 1em;
 }
 
 .card {
-    margin-top:.5em;
-    margin-bottom:.5em;
+    width: 100%;
+
+    text-align: left;
+
 }
 
+body {
+    background-color: var(--color-3);
+}
 
+h3, h4 {
+    margin: 0em;
+}

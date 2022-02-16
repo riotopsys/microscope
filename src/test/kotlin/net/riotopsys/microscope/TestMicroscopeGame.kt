@@ -18,6 +18,15 @@ internal class TestMicroscopeGame{
                 player("Addie", "addie@addie.io")
                 player("Bors", "Bors@bors.com")
                 player("Cat", "cat@cat.aww")
+
+                palette {
+                    yes("Gods can be killed")
+                    yes("All worlds physically connected")
+                    yes("Intelligent Swords")
+
+                    no("Raising the dead")
+                    no("Mortal wizards")
+                }
             }
 
             rounds {

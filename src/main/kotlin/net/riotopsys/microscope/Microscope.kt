@@ -1,10 +1,5 @@
 package net.riotopsys.microscope
 
-import kotlinx.html.*
-import kotlinx.html.stream.appendHTML
-import java.io.Writer
-
-
 fun microscopeGame(name: String, lambda: MicroscopeGame.()->Unit ): MicroscopeGame{
     val game = MicroscopeGame(name)
     game.lambda()
@@ -25,6 +20,10 @@ class MicroscopeGame(val name: String) {
         get() = _periods.toList()
     val foci: List<String>
         get() = rounds?.foci ?: emptyList()
+    val pallet: Palette?
+        get() = setup?.palette
+    val legacies: Map<Player, String>
+        get() = rounds?.legacies ?: emptyMap()
 
     @Synchronized fun setup(lambda: Setup.() -> Unit) {
         if ( setup != null ) throw SequenceException("only one setup block allowed")
@@ -99,6 +98,8 @@ class Rounds(private val game:MicroscopeGame) {
 
     private val focusList = mutableListOf<String>()
     private val activeLegacies = mutableMapOf<Player, String>()
+    val legacies: Map<Player, String>
+        get() = activeLegacies.toMap()
 
     private val _rounds: MutableList<Round> = mutableListOf( Round(null, null, "", activeLegacies.toMap()) )
     val rounds: List<Round>
@@ -122,7 +123,7 @@ class Rounds(private val game:MicroscopeGame) {
 
     fun legacy(player: Player?, legacy: String) {
         player?.let{
-
+            activeLegacies[it] = legacy
         }
     }
 
@@ -130,10 +131,37 @@ class Rounds(private val game:MicroscopeGame) {
 
 class Setup {
     val players = mutableMapOf<String, Player>()
+    var palette: Palette? = null
 
     fun player(name: String, email: String): Player {
         return Player(name, email).also { players[it.name]=it }
     }
+
+    fun palette(lambda: Palette.() -> Unit) {
+        val palette = Palette()
+        palette.lambda()
+        this.palette = palette
+    }
+}
+
+class Palette {
+
+    private val _yesList = mutableListOf<String>()
+    val yesList: List<String>
+        get() = _yesList.toList()
+
+    private val _noList = mutableListOf<String>()
+    val noList: List<String>
+        get() = _noList.toList()
+
+    fun yes(item: String) {
+        _yesList.add(item)
+    }
+
+    fun no(item: String) {
+        _noList.add(item)
+    }
+
 }
 
 data class Player(val name: String, val email: String)
@@ -158,14 +186,6 @@ open class Action(val tone: Tone, val name: String) {
         _descriptions.add(text)
     }
 
-    fun HtmlBlockTag.printDescriptions() {
-        +"Tone:${tone.name}"
-        descriptions.forEach {
-            p {
-                +it
-            }
-        }
-    }
 }
 
 enum class Tone {

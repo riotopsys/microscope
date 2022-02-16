@@ -28,13 +28,50 @@ fun MicroscopeGame.printSummary(out: Writer) {
         body {
             h1 { +name }
             printPlayers(this)
+            printPallet( this )
             printFocus(this)
+            printLegacies( this )
             periods.forEach {
                 it.print(this)
             }
             script {
                 unsafe {
                     +loadResource("collapsible.js")
+                }
+            }
+        }
+    }
+}
+
+private fun MicroscopeGame.printLegacies(tag: HtmlBlockTag) {
+    tag.div {
+        h2 { +"Legacies" }
+        ul {
+            legacies.entries.forEach {
+                li {
+                    +"${it.value} (${it.key.name})"
+                }
+            }
+        }
+    }
+}
+
+private fun MicroscopeGame.printPallet(tag: HtmlBlockTag) {
+    tag.div {
+        h2 { +"Pallet" }
+        div {
+            strong { +"Yes" }
+            ul{
+                pallet?.yesList?.forEach {
+                    li { +it }
+                }
+            }
+        }
+        div {
+            strong { +"No" }
+            ul{
+                pallet?.noList?.forEach {
+                    li { +it }
                 }
             }
         }
@@ -66,14 +103,13 @@ private fun MicroscopeGame.printPlayers(tag: HtmlBlockTag) {
 fun Period.print(tag: HtmlBlockTag) {
     tag.div {
         classes = setOf("card")
-        button(type = ButtonType.button) {
-            classes = setOf("collapsible", "period", "active")
-            +this@print.name
+        div {
+            classes = setOf("header", "period")
+            h3 { +this@print.name }
+            printDescriptions(this)
         }
         div {
-            classes = setOf("content", "period")
-            style = "display: block;"
-            printDescriptions()
+            classes = setOf("content")
             events.forEach {
                 it.print(this)
             }
@@ -84,14 +120,13 @@ fun Period.print(tag: HtmlBlockTag) {
 fun Event.print(tag: HtmlBlockTag) {
     tag.div {
         classes = setOf("card")
-        button(type = ButtonType.button) {
-            classes = setOf("collapsible", "event", "active")
-            +this@print.name
+        div {
+            classes = setOf("header", "event")
+            h3{+this@print.name}
+            printDescriptions(this)
         }
         div {
             classes = setOf("content", "event")
-            style = "display: block;"
-            printDescriptions()
             scenes.forEach {
                 it.print(this)
             }
@@ -102,13 +137,9 @@ fun Event.print(tag: HtmlBlockTag) {
 fun Scene.print(tag: HtmlBlockTag) {
     tag.div {
         classes = setOf("card")
-        button(type = ButtonType.button) {
-            classes = setOf("collapsible", "scene", "active")
-            +this@print.question
-        }
         div {
-            classes = setOf("content", "scene")
-            style = "display: block;"
+            classes = setOf("header", "scene")
+            h4 { +this@print.question }
             div {
                 p { +"Setting: $setting" }
                 p { +"Answer: $answer" }
@@ -121,11 +152,13 @@ fun Scene.print(tag: HtmlBlockTag) {
 fun Action.printDescriptions(tag: HtmlBlockTag) {
     tag.apply {
         +"Tone:${tone.name}"
-        descriptions.forEach {
-            p {
-                +it
+//        p {
+            descriptions.forEach {
+                p {
+                    +it
+                }
             }
-        }
+//        }
     }
 }
 
