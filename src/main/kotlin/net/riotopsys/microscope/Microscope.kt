@@ -25,6 +25,9 @@ class MicroscopeGame(val name: String) {
     val legacies: Map<Player, String>
         get() = rounds?.legacies ?: emptyMap()
 
+    val playRounds: List<PlayRounds>
+        get() = rounds?.playRounds ?: emptyList()
+
     @Synchronized fun setup(lambda: Setup.() -> Unit) {
         if ( setup != null ) throw SequenceException("only one setup block allowed")
         val setup = Setup()
@@ -101,11 +104,16 @@ class Rounds(private val game:MicroscopeGame) {
     val legacies: Map<Player, String>
         get() = activeLegacies.toMap()
 
-    private val _rounds: MutableList<Round> = mutableListOf( Round(null, null, "", activeLegacies.toMap()) )
+    private val _rounds: MutableList<PlayRounds> = mutableListOf(
+        Round(null, null, "", activeLegacies.toMap())
+    )
     val rounds: List<Round>
-        get() = _rounds.toList()
+        get() = _rounds.toList().filterIsInstance(Round::class.java)
     val foci: List<String>
         get() = focusList.toList()
+
+    val playRounds: List<PlayRounds>
+        get() = _rounds.toList()
 
     fun round(lens: Player?, player: Player?):Round {
         if ( lens == null ) throw InvalidArgumentException("lens is required")
@@ -117,14 +125,36 @@ class Rounds(private val game:MicroscopeGame) {
         return game.players[name]
     }
 
-    fun focus(name: String) {
+    fun focus(lens: Player?, name: String) {
         focusList.add(name)
+        _rounds.add(FocusChange( lens, name ))
     }
 
     fun legacy(player: Player?, legacy: String) {
         player?.let{
             activeLegacies[it] = legacy
         }
+        _rounds.add(LegacyChange(player, legacy))
+    }
+
+}
+
+interface PlayRounds
+
+class LegacyChange(val player: Player?, val legacy: String) : PlayRounds {
+
+}
+
+class FocusChange(val lens: Player?,val  name: String) : PlayRounds {
+
+}
+
+class Round(val lens: Player?, val player: Player?, val focus: String, val toMap: Map<Player, String>):PlayRounds{
+
+    val actions = mutableListOf<Action>()
+
+    fun attach(action: Action) {
+        actions.add(action)
     }
 
 }
@@ -165,16 +195,6 @@ class Palette {
 }
 
 data class Player(val name: String, val email: String)
-
-class Round(val lens: Player?, val player: Player?, val focus: String, val toMap: Map<Player, String>){
-
-    private val actions = mutableListOf<Action>()
-
-    fun attach(action: Action) {
-        actions.add(action)
-    }
-
-}
 
 open class Action(val tone: Tone, val name: String) {
 

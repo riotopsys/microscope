@@ -7,11 +7,67 @@ import java.io.Writer
 
 
 fun MicroscopeGame.outputHtml(path: String) {
-    File("$path/${this.name.replace(" ","_")}/index.html").apply {
-        parentFile.apply { if ( !exists() ) mkdirs() }
+    val root = File(  "$path/${this.name.replace(" ","_")}" )
+        .apply { if ( !exists() ) mkdirs() }
+
+    File( root,"index.html").apply {
         if ( !exists() ) createNewFile()
     }.bufferedWriter().use { out ->
         this.printSummary(out)
+    }
+
+    File( root,"rounds.html").apply {
+        if ( !exists() ) createNewFile()
+    }.bufferedWriter().use { out ->
+        this.printRoundSummary(out)
+    }
+}
+
+private fun MicroscopeGame.printRoundSummary(out: Writer) {
+    out.appendHTML().html {
+        head {
+            title { +"$name Rounds"  }
+            style {
+                unsafe {
+                    +loadResource("microscope.css")
+                }
+            }
+        }
+        body {
+            h1 { +"$name Rounds" }
+
+            playRounds.forEachIndexed { _, round ->
+                when ( round ) {
+                    is Round -> round.print(this, this@printRoundSummary.round.indexOf(round))
+                    is FocusChange -> round.print(this)
+                    is LegacyChange -> round.print(this)
+                }
+            }
+
+            script {
+                unsafe {
+                    +loadResource("collapsible.js")
+                }
+            }
+        }
+    }
+}
+
+private fun LegacyChange.print(tag: HtmlBlockTag) {
+    tag.h2 { +"New Legacy: $legacy"  }
+    tag.div {
+        player?.let {
+            +"Player: ${player?.name} "
+        }
+    }
+}
+
+private fun FocusChange.print(tag: HtmlBlockTag) {
+    tag.h2 { +"Focus change: $name"  }
+    tag.div {
+        lens?.let {
+            +"Player: ${lens?.name} "
+        }
     }
 }
 
@@ -55,6 +111,33 @@ private fun MicroscopeGame.printLegacies(tag: HtmlBlockTag) {
         }
     }
 }
+
+private fun Round.print(tag: HtmlBlockTag, index: Int) {
+
+    tag.h2 { +"Round ${index} " }
+
+    tag.div {
+        player?.let {
+            +"Player: ${player?.name} "
+            br
+        }
+        lens?.let {
+            +"Lens: ${lens?.name}"
+        }
+    }
+
+    actions.forEach { action ->
+        tag.div {
+            when (action) {
+                is Period -> action.periodHeader(tag)
+                is Event -> action.printHeader(tag)
+                is Scene -> action.print(tag)
+            }
+        }
+    }
+
+}
+
 
 private fun MicroscopeGame.printPallet(tag: HtmlBlockTag) {
     tag.div {
@@ -103,11 +186,7 @@ private fun MicroscopeGame.printPlayers(tag: HtmlBlockTag) {
 fun Period.print(tag: HtmlBlockTag) {
     tag.div {
         classes = setOf("card")
-        div {
-            classes = setOf("header", "period")
-            h3 { +this@print.name }
-            printDescriptions(this)
-        }
+        periodHeader(this)
         div {
             classes = setOf("content")
             events.forEach {
@@ -117,20 +196,32 @@ fun Period.print(tag: HtmlBlockTag) {
     }
 }
 
+fun Period.periodHeader(tag: HtmlBlockTag) {
+    tag.div {
+        classes = setOf("header", "period")
+        h3 { +name }
+        printDescriptions(this)
+    }
+}
+
 fun Event.print(tag: HtmlBlockTag) {
     tag.div {
         classes = setOf("card")
-        div {
-            classes = setOf("header", "event")
-            h3{+this@print.name}
-            printDescriptions(this)
-        }
+        printHeader(this)
         div {
             classes = setOf("content", "event")
             scenes.forEach {
                 it.print(this)
             }
         }
+    }
+}
+
+private fun Event.printHeader(tag: HtmlBlockTag) {
+    tag.div {
+        classes = setOf("header", "event")
+        h3 { +name }
+        printDescriptions(this)
     }
 }
 
@@ -152,13 +243,11 @@ fun Scene.print(tag: HtmlBlockTag) {
 fun Action.printDescriptions(tag: HtmlBlockTag) {
     tag.apply {
         +"Tone:${tone.name}"
-//        p {
-            descriptions.forEach {
-                p {
-                    +it
-                }
+        descriptions.forEach {
+            p {
+                +it
             }
-//        }
+        }
     }
 }
 

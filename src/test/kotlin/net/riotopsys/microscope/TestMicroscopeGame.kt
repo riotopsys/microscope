@@ -31,14 +31,14 @@ internal class TestMicroscopeGame{
 
             rounds {
                 //setup round[0]
-                focus( "Romance of Goorash and Svetka" )
+                focus( player(Addie), "Romance of Goorash and Svetka" )
                 round( lens = player(Addie), player = player(Addie) ) //round[1]
                 round( lens = player(Addie), player = player(Bors) ) //round[2]
                 round( lens = player(Addie), player = player(Cat) ) //round[3]
                 round( lens = player(Addie), player = player(Addie) ) //round[4]
                 legacy( player(Cat), "Sword of Storms" )
                 round( lens = player(Addie), player = player(Cat) ) //round[5]
-                focus( "Well of Fate" )
+                focus( player(Addie), "Well of Fate" )
                 round( lens = player(Bors), player = player(Bors) ) //round[6]
 
             }
