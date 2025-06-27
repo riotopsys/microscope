@@ -30,7 +30,6 @@ internal class TestMicroscopeGame{
             }
 
             rounds {
-                //setup round[0]
                 focus( player(Addie), "Romance of Goorash and Svetka" )
                 legacy( player(Cat), "Sword of Storms" )
             }

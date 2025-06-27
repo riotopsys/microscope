@@ -9,7 +9,7 @@ fun microscopeGame(name: String, lambda: MicroscopeGame.()->Unit ): MicroscopeGa
 class MicroscopeGame(val name: String) {
 
     private val _periods = mutableListOf<Period>()
-    private var setup: Setup? = null
+    internal var setup: Setup? = null
     private var rounds: Rounds? = null
 
     val players: Map<String, Player>
@@ -175,7 +175,7 @@ class FocusChange(val lens: Player?,val  name: String) : PlayRounds {
 
 }
 
-class Round(val lens: Player?, val player: Player?, val focus: String, val toMap: Map<Player, String>):PlayRounds{
+class Round(val lens: Player?, val player: Player?, val focus: String, val activeLegacies: Map<Player, String>):PlayRounds{
 
     val actions = mutableListOf<Action>()
 
