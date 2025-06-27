@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.9.22"
 }
 
 group = "net.riotopsys"
@@ -20,6 +20,6 @@ tasks.test {
     useJUnit()
 }
 
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "1.8"
-}
+//tasks.withType<KotlinCompile>() {
+//    kotlinOptions.jvmTarget = "1.8"
+//}
