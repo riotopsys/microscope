@@ -38,7 +38,7 @@ private fun MicroscopeGame.printRoundSummary(out: Writer) {
 
             playRounds.forEachIndexed { _, round ->
                 when ( round ) {
-                    is Round -> round.print(this, this@printRoundSummary.round.indexOf(round))
+                    is Round -> round.print(this, this@printRoundSummary.round.rounds.indexOf(round))
                     is FocusChange -> round.print(this)
                     is LegacyChange -> round.print(this)
                 }

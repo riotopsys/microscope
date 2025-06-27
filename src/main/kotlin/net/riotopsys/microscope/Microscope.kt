@@ -9,13 +9,13 @@ fun microscopeGame(name: String, lambda: MicroscopeGame.()->Unit ): MicroscopeGa
 class MicroscopeGame(val name: String) {
 
     private val _periods = mutableListOf<Period>()
-    private var setup: Setup? = null
+    internal var setup: Setup? = null
     private var rounds: Rounds? = null
 
     val players: Map<String, Player>
-        get() = setup?.players?.toMap() ?: emptyMap()
-    val round: List<Round>
-        get() = rounds?.rounds ?: emptyList()
+        get() = setup?.players ?: emptyMap()
+    val round: Rounds
+        get() = rounds ?: throw SequenceException("rounds not defined")
     val periods: List<Period>
         get() = _periods.toList()
     val foci: List<String>
@@ -115,10 +115,36 @@ class Rounds(private val game:MicroscopeGame) {
     val playRounds: List<PlayRounds>
         get() = _rounds.toList()
 
-    fun round(lens: Player?, player: Player?):Round {
-        if ( lens == null ) throw InvalidArgumentException("lens is required")
-        if ( player == null ) throw InvalidArgumentException("player is required")
-        return Round( lens, player, focusList.last(), activeLegacies.toMap() ).also { _rounds.add(it)  }
+    private fun roundCount(): Int = _rounds.count { it is Round }
+
+    private fun calcLensPlayer(index: Int): Pair<Player, Player> {
+        val players = game.setup?.playerOrder ?: emptyList()
+        if (players.isEmpty()) throw SequenceException("no players defined")
+
+        val actualIndex = index - 1
+        val cycle = players.size + 1
+        val lensIndex = ((actualIndex) / cycle) % players.size
+        val pos = actualIndex % cycle
+        val playerIndex = if (pos < players.size) {
+            (lensIndex + pos) % players.size
+        } else {
+            lensIndex
+        }
+        return players[lensIndex] to players[playerIndex]
+    }
+
+    operator fun get(index: Int): Round {
+        while (roundCount() <= index) {
+            val count = roundCount()
+            if (count == 0) {
+                // setup round already exists
+                continue
+            }
+            val (lens, player) = calcLensPlayer(count)
+            val focus = focusList.lastOrNull() ?: ""
+            _rounds.add(Round(lens, player, focus, activeLegacies.toMap()))
+        }
+        return _rounds.filterIsInstance<Round>()[index]
     }
 
     fun player(name: String): Player? {
@@ -149,7 +175,7 @@ class FocusChange(val lens: Player?,val  name: String) : PlayRounds {
 
 }
 
-class Round(val lens: Player?, val player: Player?, val focus: String, val toMap: Map<Player, String>):PlayRounds{
+class Round(val lens: Player?, val player: Player?, val focus: String, val activeLegacies: Map<Player, String>):PlayRounds{
 
     val actions = mutableListOf<Action>()
 
@@ -160,11 +186,15 @@ class Round(val lens: Player?, val player: Player?, val focus: String, val toMap
 }
 
 class Setup {
-    val players = mutableMapOf<String, Player>()
+    private val _players = LinkedHashMap<String, Player>()
+    val players: Map<String, Player>
+        get() = _players
+    val playerOrder: List<Player>
+        get() = _players.values.toList()
     var palette: Palette? = null
 
     fun player(name: String, email: String): Player {
-        return Player(name, email).also { players[it.name]=it }
+        return Player(name, email).also { _players[it.name]=it }
     }
 
     fun palette(lambda: Palette.() -> Unit) {
